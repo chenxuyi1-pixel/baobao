@@ -87,6 +87,9 @@ async function requestDoubaoTts(role, text) {
 }
 
 export default async function handler(req, res) {
+  const startedAt = Date.now();
+  const region = process.env.VERCEL_REGION || "local";
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -104,9 +107,18 @@ export default async function handler(req, res) {
     res.setHeader("content-type", "audio/mpeg");
     res.setHeader("cache-control", "no-store");
     res.setHeader("content-length", audio.length);
+    res.setHeader("server-timing", `doubao-tts;dur=${Date.now() - startedAt}`);
+    res.setHeader("x-baobao-region", region);
     return res.status(200).send(audio);
   } catch (error) {
     console.log(`[tts] 请求失败，前端回退系统语音：${error.message}`);
-    return res.status(503).json({ error: "TTS 暂不可用", fallback: true });
+    res.setHeader("server-timing", `doubao-tts;dur=${Date.now() - startedAt}`);
+    res.setHeader("x-baobao-region", region);
+    return res.status(503).json({
+      error: "TTS 暂不可用",
+      fallback: true,
+      elapsedMs: Date.now() - startedAt,
+      region
+    });
   }
 }

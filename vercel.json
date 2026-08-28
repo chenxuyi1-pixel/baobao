@@ -1,11 +1,13 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "buildCommand": "",
   "outputDirectory": ".",
+  "regions": ["hkg1"],
   "functions": {
-    "api/*.js": {
-      "maxDuration": 10
-    }
+    "api/chat.js": { "maxDuration": 30 },
+    "api/tts.js": { "maxDuration": 60 },
+    "api/status.js": { "maxDuration": 10 }
   },
   "rewrites": [
     { "source": "/((?!api/|assets/|data/|app.js|styles.css).*)", "destination": "/index.html" }
