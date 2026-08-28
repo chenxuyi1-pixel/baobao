@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "functions": {
+    "api/*.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    { "source": "/((?!api/|assets/|data/|app.js|styles.css).*)", "destination": "/index.html" }
+  ]
+}

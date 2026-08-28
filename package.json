@@ -1,0 +1,16 @@
+{
+  "name": "baobao-h5-competition-demo",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "dev:https": "node https-proxy.mjs",
+    "start": "node server.mjs",
+    "check": "node --check server.mjs && node --check public/app.js",
+    "test:dialogue": "node tests/mock-dialogue.test.mjs"
+  },
+  "dependencies": {
+    "ws": "^8.21.3"
+  }
+}
