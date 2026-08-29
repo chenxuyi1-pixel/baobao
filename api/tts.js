@@ -13,8 +13,10 @@ const ttsVoices = {
   neutral: process.env.TTS_VOICE_NEUTRAL || "zh_female_qingchezizi_uranus_bigtts",
   mama: process.env.TTS_VOICE_MAMA || "zh_female_wenroumama_uranus_bigtts",
   yingjie: process.env.TTS_VOICE_YINGJIE || "zh_female_qingchezizi_uranus_bigtts",
-  duomi: process.env.TTS_VOICE_DUOMI || "zh_male_naiqimengwa_mars_bigtts"
+  duomi: process.env.TTS_VOICE_DUOMI || "ICL_zh_female_keainvsheng_tob"
 };
+// V3 TTS 使用 [-50, 100] 的 speech_rate；20 对应约 1.2 倍速。
+const ttsSpeechRates = { neutral: 0, mama: 20, yingjie: 10, duomi: 0 };
 
 function extractTtsAudio(raw, contentType = "") {
   if (!raw?.length) return Buffer.alloc(0);
@@ -69,7 +71,11 @@ async function requestDoubaoTts(role, text) {
         req_params: {
           text: String(text).slice(0, 900),
           speaker: ttsVoices[role] || ttsVoices.neutral,
-          audio_params: { format: "mp3", sample_rate: 24000 },
+          audio_params: {
+            format: "mp3",
+            sample_rate: 24000,
+            speech_rate: ttsSpeechRates[role] || 0
+          },
           additions: JSON.stringify({ disable_markdown_filter: true })
         }
       }),
@@ -109,11 +115,13 @@ export default async function handler(req, res) {
     res.setHeader("content-length", audio.length);
     res.setHeader("server-timing", `doubao-tts;dur=${Date.now() - startedAt}`);
     res.setHeader("x-baobao-region", region);
+    res.setHeader("x-baobao-voice", ttsVoices[roleId] || ttsVoices.neutral);
     return res.status(200).send(audio);
   } catch (error) {
     console.log(`[tts] 请求失败，前端回退系统语音：${error.message}`);
     res.setHeader("server-timing", `doubao-tts;dur=${Date.now() - startedAt}`);
     res.setHeader("x-baobao-region", region);
+    res.setHeader("x-baobao-voice", ttsVoices[roleId] || ttsVoices.neutral);
     return res.status(503).json({
       error: "TTS 暂不可用",
       fallback: true,

@@ -31,6 +31,7 @@ export default function handler(req, res) {
     ttsReady,
     realtimeReady,
     fallbackReady: true,
+    region: process.env.VERCEL_REGION || null,
     deployment: "vercel-serverless"
   });
 }
