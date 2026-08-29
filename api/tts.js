@@ -13,7 +13,8 @@ const ttsVoices = {
   neutral: process.env.TTS_VOICE_NEUTRAL || "zh_female_qingchezizi_uranus_bigtts",
   mama: process.env.TTS_VOICE_MAMA || "zh_female_wenroumama_uranus_bigtts",
   yingjie: process.env.TTS_VOICE_YINGJIE || "zh_female_qingchezizi_uranus_bigtts",
-  duomi: process.env.TTS_VOICE_DUOMI || "ICL_zh_female_keainvsheng_tob"
+  // 比赛版锁定角色音色，避免云端遗留环境变量把小多米切回错误女声。
+  duomi: "zh_male_naiqimengwa_mars_bigtts"
 };
 // V3 TTS 使用 [-50, 100] 的 speech_rate；20 对应约 1.2 倍速。
 const ttsSpeechRates = { neutral: 0, mama: 20, yingjie: 10, duomi: 0 };

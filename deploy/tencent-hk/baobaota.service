@@ -1,0 +1,26 @@
+[Unit]
+Description=Baobaota H5 Node Service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/opt/baobaota
+Environment=NODE_ENV=production
+Environment=PORT=8765
+ExecStart=/usr/bin/node /opt/baobaota/server.mjs
+Restart=always
+RestartSec=3
+TimeoutStopSec=20
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/baobaota
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
